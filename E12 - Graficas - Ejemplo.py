@@ -17,12 +17,12 @@ media_edad = df['Edad'].mean()
 mediana_edad = df['Edad'].median()
 moda_edad = df['Edad'].mode()
 
-# Imprimir los resultados
+# 5. Imprimir los resultados
 print(f"\nMedia de Edad: {media_edad}")
 print(f"Mediana de Edad: {mediana_edad}")
 print(f"Moda de Edad: {moda_edad[0]}") # Asumiendo que solo hay una moda
 
-# 3. Crear un histograma de la columna `Edad`
+# 6. Crear un histograma de la columna `Edad`
 plt.figure(figsize=(8, 5))
 plt.hist(df['Edad'], bins=5, edgecolor='black')
 plt.title('Histograma de Edades')
@@ -30,7 +30,7 @@ plt.xlabel('Edad')
 plt.ylabel('Frecuencia')
 plt.show()
 
-# 4. Crear un boxplot de la columna `Edad`
+# 7. Crear un boxplot de la columna `Edad`
 plt.figure(figsize=(6, 4))
 plt.boxplot(df['Edad'])
 plt.title('Boxplot de Edades')
