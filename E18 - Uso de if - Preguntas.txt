@@ -1,0 +1,14 @@
+
+Preguntas para reflexionar.
+
+1. ¿Qué sucede si el usuario introduce un producto no válido? ¿Cómo podrías manejar esa situación?
+Si el usuario introduce un producto no válido, el programa muestra un mensaje de error y le pide que intente nuevamente.
+
+2. ¿Cómo puedes modificar el programa para aceptar cantidades de productos en lugar de solo una unidad?
+Al seleccionar un producto, se le preguntará al usuario cuántas unidades desea adquirir. 
+Luego, el programa calculará el total multiplicando el precio del producto por la cantidad solicitada 
+y sumará este monto al total de la compra.
+
+3. ¿Qué cambios harías si quisieras agregar más productos o reglas de descuento en el futuro?
+Para agregar más productos, solo hay que añadirlos al diccionario de productos. Para nuevas reglas de descuento, 
+se pueden usar listas o funciones que faciliten la gestión de descuentos según el total de la compra.
