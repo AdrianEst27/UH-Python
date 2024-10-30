@@ -1,99 +1,70 @@
-import pandas as pd
 
-def mostrar_menu(productos):
-    df = pd.DataFrame(productos.items(), columns=['Producto', 'Precio'])
-    df['Precio'] = df['Precio'].apply(lambda x: f"${x:.2f}")
+# TODO: Sistema de Gestión de Tiendas en Línea
 
-    print("\n > CybeRupi Tienda en Línea <\n")
-    print(f"{'Productos':<40} {'Precio':>10}")
-    print('-' * 54)
+def mostrar_menu_productos(productos):
 
-    for idx, row in df.iterrows():
-        print(f"{idx + 1}. {row['Producto']:<40} {row['Precio']:>10}")
+    """ Función para mostrar el menú de productos. """
 
-    return df
+    print("\nProductos                                    Precio")
+    print("-" * 55)
+    for i, (producto, precio) in enumerate(productos.items(), start=1):
+        print(f"{i}. {producto:<40} ${precio:>10.2f}")
 
-def seleccionar_productos(df):
-    seleccion = []
-    while True:
-        try:
-            eleccion = input("Selecciona un producto por su número (o escribe 'fin' para terminar): ")
-            if eleccion.lower() == 'fin':
-                break
-            
-            index = int(eleccion) - 1  # Convertir a índice (0 basado)
-            if 0 <= index < len(df):
-                seleccion.append(df.iloc[index])  # Agregar el producto completo
-                print(f"Producto agregado: {df.iloc[index]['Producto']}")
-            else:
-                print("Número no válido. Intenta de nuevo.")
-        except ValueError:
-            print("Entrada no válida. Debes ingresar un número o 'fin'.")
-
-    return seleccion
-
-def calcular_total(seleccion, es_vip):
-    if not seleccion:
-        print("No se han seleccionado productos.")
-        return 0, 0  # Retornar 0 si no hay selección
-    
-    # Sumar los precios originales (sin formatear)
-    total = sum(producto['Precio'] for producto in seleccion)
-    
-    # Aplicar descuentos
-    if total < 50:
-        descuento = 0
-    elif 50 <= total < 100:
-        descuento = total * 0.10
-    else:
-        descuento = total * 0.20
-    
-    if es_vip:
-        descuento += total * 0.05  # Descuento adicional VIP
-    
-    total_con_descuento = total - descuento
-    return total, total_con_descuento
-
-def aplicar_recargo(total_con_descuento, metodo_pago):
-    if metodo_pago.lower() == "efectivo":
-        recargo = total_con_descuento * 0.05  # 5% de recargo
-        total_final = total_con_descuento + recargo
-    else:
-        total_final = total_con_descuento
-    
-    return total_final
-
-#main():
-productos = {
-        "RTX 4090 SUPER OC 12GB": 40000.0,
-        "RTX 4060 Ti 8GB": 13000.0,
-        "Intel Core i9 14900K": 15000.0,
-        "Memoria RAM 16GB": 800.0,
-        "Disco Duro SSD 1TB": 1200.0,
-        "Fuente de Poder 750W": 1000.0,
-        "Gabinete RGB": 700.0,
-        "Refrigeración Líquida": 1200.0,
+def main():
+    # Productos y precios
+    productos = {
+        "RTX 4090 SUPER OC 12GB": 40000,
+        "RTX 4060 Ti 8GB": 13000,
+        "Intel Core i9 14900K": 15000,
+        "Memoria RAM 16GB": 800,
+        "Disco Duro SSD 1TB": 1200,
+        "Fuente de Poder 750W": 1000,
+        "Gabinete RGB": 700,
+        "Refrigeración Líquida": 1200
     }
+    
+    # Para que el título del menú se vea centrado.
+    titulo = "Rupi PC Componentes"
+    print(f"\n{'> ' + titulo + ' <':^50}")
 
-    df = mostrar_menu(productos)
-    seleccion = seleccionar_productos(df)
+    mostrar_menu_productos(productos)
+    print("\n")
 
-    # Verificar que se seleccionaron productos
-    if not seleccion:
-        print("No has seleccionado ningún producto. El programa se cerrará.")
-        return
+    total_compra = 0
+    while True:
+        seleccion = input(" > Selecciona un producto por su número (o escribe 'fin' para terminar): ")
+        if seleccion.lower() == 'fin':
+            break
+        if seleccion.isdigit() and 1 <= int(seleccion) <= len(productos):
+            total_compra += list(productos.values())[int(seleccion) - 1]
+        else:
+            print(" > Selección no válida. Intenta nuevamente.")
 
-    # Preguntar si es VIP
-    es_vip = input("¿Eres miembro VIP? (sí/no): ").strip().lower() == "sí"
+    # Pregunta si el usuario es VIP o no
+    vip = input("\n > ¿Eres miembro VIP? (si/no): ").lower() == 'si'
 
-    total, total_con_descuento = calcular_total(seleccion, es_vip)
+    # Aplica un decuento dependiendo el total de la compra
+    descuento = 0
 
-    # Preguntar método de pago
-    metodo_pago = input("Ingresa el método de pago (efectivo/tarjeta): ").strip().lower()
-    total_final = aplicar_recargo(total_con_descuento, metodo_pago)
+    if total_compra < 50: descuento = 0
+    elif total_compra <= 100: descuento = total_compra * 0.1
+    
+    # Aplica un descuento si es VIP
+    if vip: descuento += total_compra * 0.05
 
-    # Mostrar resultados
-    print(f"\nTotal sin descuento: ${total:.2f}")
-    print(f"Total con descuento: ${total_con_descuento:.2f}")
-    print(f"Total final (con recargo si es efectivo): ${total_final:.2f}")
-    print("¡Gracias por tu compra!")
+    # Calcula el total de la compra con descuento
+    total_con_descuento = total_compra - descuento
+
+    # Pregunta el método de pago
+    metodo_pago = input(" > Método de pago (tarjeta/efectivo): ").lower()
+
+    # Aplica el recargo si el insolente paga en efectivo
+    if metodo_pago == 'efectivo': total_con_descuento *= 1.05
+
+    # Muestra el total de la compra
+    print(f"\n > Subtotal: {total_compra}")
+    print(f" > Descuento: {descuento}")
+    print(f" > Total de la compra: ${total_con_descuento:.2f}")
+    print(" > ¡Gracias por tu compra!")
+
+main()
